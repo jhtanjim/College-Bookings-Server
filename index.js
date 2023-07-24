@@ -26,12 +26,14 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
         // Send a ping to confirm a successful connection
 
         const collegeCollection = client.db('College_Bookings').collection('colleges')
 
         const collegeAddmissionCollection = client.db('College_Bookings').collection('addmission')
+
+        const reviewCollection = client.db('College_Bookings').collection('review')
 
         app.get('/colleges', async (req, res) => {
             const cursor = collegeCollection.find()
@@ -63,6 +65,18 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/review', async (req, res) => {
+            const cursor = reviewCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        app.post('/review', async (req, res) => {
+            const newReviews = req.body
+            const result = await reviewCollection.insertOne(newReviews)
+            res.send(result)
+
+        })
 
 
 
